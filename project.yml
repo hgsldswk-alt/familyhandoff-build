@@ -1,0 +1,94 @@
+name: FamilyHandoff
+options:
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: en
+  knownRegions: [en, zh-Hans, zh-Hant]
+settings:
+  base:
+    APP_ID: com.hgsldswk.familyhandoff
+    APP_STORE_ID: ""
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+targets:
+  FamilyHandoff:
+    type: application
+    platform: iOS
+    sources:
+      - path: FamilyHandoff
+        excludes: [PrivacyInfo.xcprivacy]
+      - path: FamilyHandoff/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_ID)
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+      configs:
+        Release:
+          CODE_SIGN_STYLE: Manual
+          CODE_SIGN_IDENTITY: Apple Distribution
+          PROVISIONING_PROFILE_SPECIFIER: FamilyHandoff AppStore
+    info:
+      path: FamilyHandoff/Info.plist
+      properties:
+        CFBundleDisplayName: Family Handoff
+        CFBundleDevelopmentRegion: en
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        ITSAppUsesNonExemptEncryption: false
+        APP_STORE_ID: $(APP_STORE_ID)
+        NSFaceIDUsageDescription: Unlock your family handoff list.
+        LSSupportsOpeningDocumentsInPlace: true
+        CFBundleDocumentTypes:
+          - CFBundleTypeName: Family Handoff List
+            CFBundleTypeRole: Viewer
+            LSHandlerRank: Owner
+            LSItemContentTypes: [com.hgsldswk.familyhandoff.list]
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: com.hgsldswk.familyhandoff.list
+            UTTypeConformsTo: [public.data, public.content]
+            UTTypeDescription: Family Handoff List
+            UTTypeTagSpecification:
+              public.filename-extension: [familyhandoff]
+  FamilyHandoffTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: [FamilyHandoffTests, Shared]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_ID).tests
+        GENERATE_INFOPLIST_FILE: YES
+  FamilyHandoffUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: [FamilyHandoffUITests]
+    dependencies:
+      - target: FamilyHandoff
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: $(APP_ID).uitests
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: FamilyHandoff
+schemes:
+  FamilyHandoff:
+    build:
+      targets:
+        FamilyHandoff: all
+        FamilyHandoffTests: [test]
+    test:
+      config: Debug
+      targets: [FamilyHandoffTests]
+  FamilyHandoffUI:
+    build:
+      targets:
+        FamilyHandoff: all
+        FamilyHandoffUITests: [test]
+    test:
+      config: Debug
+      targets: [FamilyHandoffUITests]
